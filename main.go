@@ -1,9 +1,9 @@
 package main
 
 import (
-	"tiamat/m/v0/services"
+	"tiamat/m/v0/routes"
 )
 
 func main() {
-	services.Run()
+	routes.Entry()
 }

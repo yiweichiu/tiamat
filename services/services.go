@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	feature "tiamat/m/v0/services/features"
+	"tiamat/m/v0/services/magics"
 
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
@@ -25,6 +27,10 @@ func Init() {
 }
 
 func Handler(ctx *gin.Context) {
+	if bot == nil {
+		Init()
+	}
+
 	events, err := bot.ParseRequest(ctx.Request)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
@@ -55,8 +61,13 @@ func eventTypeMsg(event *linebot.Event) {
 		text := message.Text
 		replyMsg := ""
 
-		if strings.Contains(text, "翊維") {
-			replyMsg = "yo" + event.Source.UserID
+		if text[0] == '!' {
+			replyMsg = magicWord(text)
+		}
+		tokens := strings.Split(text, " ")
+		switch tokens[0] {
+		case feature.RollMagicWord:
+			replyMsg = feature.Roll(text)
 		}
 
 		if _, err := bot.ReplyMessage(
@@ -67,5 +78,16 @@ func eventTypeMsg(event *linebot.Event) {
 		}
 	default:
 		log.Printf("message: %v", message)
+	}
+}
+
+func magicWord(msg string) string {
+	tokens := strings.Split(msg, " ")
+
+	switch tokens[0] {
+	case magics.MagicWordRoll:
+		return feature.Roll(msg)
+	default:
+		return ""
 	}
 }

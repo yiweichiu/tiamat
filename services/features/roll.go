@@ -1,4 +1,4 @@
-package feature
+package features
 
 import (
 	"strconv"
@@ -12,13 +12,21 @@ func Roll(msg string) string {
 	tokens := strings.Split(msg, " ")
 	wrongArg := false
 
-	from, err := strconv.ParseInt(tokens[1], 10, 0)
-	if err != nil {
+	var from, to int64
+	var err error
+
+	if len(tokens) < 3 {
 		wrongArg = true
-	}
-	to, err := strconv.ParseInt(tokens[2], 10, 0)
-	if err != nil {
-		wrongArg = true
+	} else {
+		from, err = strconv.ParseInt(tokens[1], 10, 0)
+		if err != nil {
+			wrongArg = true
+		}
+
+		to, err = strconv.ParseInt(tokens[2], 10, 0)
+		if err != nil {
+			wrongArg = true
+		}
 	}
 
 	var rand int

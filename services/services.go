@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"tiamat/m/v0/services/features"
 	feature "tiamat/m/v0/services/features"
 	"tiamat/m/v0/services/magics"
 
@@ -64,11 +65,6 @@ func eventTypeMsg(event *linebot.Event) {
 		if text[0] == '!' {
 			replyMsg = magicWord(text)
 		}
-		tokens := strings.Split(text, " ")
-		switch tokens[0] {
-		case feature.RollMagicWord:
-			replyMsg = feature.Roll(text)
-		}
 
 		if _, err := bot.ReplyMessage(
 			event.ReplyToken,
@@ -87,6 +83,8 @@ func magicWord(msg string) string {
 	switch tokens[0] {
 	case magics.MagicWordRoll:
 		return feature.Roll(msg)
+	case magics.MagicTranslate:
+		return features.Translate(msg)
 	default:
 		return ""
 	}

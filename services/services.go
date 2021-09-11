@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 	"tiamat/m/v0/externals/line"
-	feature "tiamat/m/v0/services/features"
+	"tiamat/m/v0/services/features"
 	"tiamat/m/v0/services/magics"
 
 	"github.com/gin-gonic/gin"
@@ -79,7 +79,7 @@ func magicWord(event *linebot.Event, msg string) string {
 
 	switch tokens[0] {
 	case magics.MagicRoll:
-		return feature.Roll(msg)
+		return features.Roll(msg)
 	default:
 		return ""
 	}

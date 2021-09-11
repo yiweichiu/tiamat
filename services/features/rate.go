@@ -1,7 +1,7 @@
-package feature
+package features
 
 func Rate(msg string) string {
-
+	return ""
 }
 
 func help() string {

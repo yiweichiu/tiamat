@@ -1,12 +1,14 @@
 package features
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
-	"tiamat/m/v0/common"
+	"time"
 )
 
-const RollMagicWord = "!roll"
+const defaultRangeFrom = 0
+const defaultRangeTo = 100
 
 func Roll(msg string) string {
 	tokens := strings.Split(msg, " ")
@@ -31,9 +33,29 @@ func Roll(msg string) string {
 
 	var rand int
 	if wrongArg {
-		rand = common.Roll()
+		rand = roll(defaultRangeFrom, defaultRangeTo)
 	} else {
-		rand = common.RollWithRange(int(from), int(to))
+		rand = roll(int(from), int(to))
 	}
 	return strconv.FormatInt(int64(rand), 10)
+}
+
+var (
+	isRolled = false
+	seed     *rand.Rand
+)
+
+func roll(from, to int) int {
+	if from > to {
+		from = defaultRangeFrom
+		to = defaultRangeTo
+	}
+
+	if !isRolled {
+		src := rand.NewSource(time.Now().UnixNano())
+		isRolled = true
+		seed = rand.New(src)
+	}
+
+	return seed.Intn(to) + from
 }

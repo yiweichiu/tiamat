@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"tiamat/m/v0/services/features"
+	"tiamat/m/v0/externals/line"
 	feature "tiamat/m/v0/services/features"
 	"tiamat/m/v0/services/magics"
 
@@ -12,16 +12,13 @@ import (
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
-const linebotSecret = "8273b1607e7aad58ea027dda7dbcc57c"
-const linebotToken = "uzNr4czd17pPxHKZ2aJ3erVkBU0XK7NcAYItFwqSEMMgR85BawivpWKMo4cFkSJTSjRERQv5XEMTXfzeKB5T1GTEGJwju80ZDQqJQzCBQTUTIr4860hOAyCeJFb1597sRb58kxD6HbcS+Vw1Y39AhwdB04t89/1O/w1cDnyilFU="
-
 var (
 	bot *linebot.Client
 )
 
 func Init() {
 	var err error
-	bot, err = linebot.New(linebotSecret, linebotToken)
+	bot, err = linebot.New(line.GetChannelSecret(), line.GetChannelAccessToken())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +60,7 @@ func eventTypeMsg(event *linebot.Event) {
 		replyMsg := ""
 
 		if text[0] == '!' {
-			replyMsg = magicWord(text)
+			replyMsg = magicWord(event, text)
 		}
 
 		if _, err := bot.ReplyMessage(
@@ -77,14 +74,12 @@ func eventTypeMsg(event *linebot.Event) {
 	}
 }
 
-func magicWord(msg string) string {
+func magicWord(event *linebot.Event, msg string) string {
 	tokens := strings.Split(msg, " ")
 
 	switch tokens[0] {
-	case magics.MagicWordRoll:
+	case magics.MagicRoll:
 		return feature.Roll(msg)
-	case magics.MagicTranslate:
-		return features.Translate(msg)
 	default:
 		return ""
 	}

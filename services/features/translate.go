@@ -11,6 +11,11 @@ import (
 const japan = "ja"
 const english = "en"
 
+/*
+	Is now not functional due to google policy,
+	possible solution is to used another `python` module called "googletrans"
+*/
+
 func Translate(msg string) string {
 	tokens := strings.Split(msg, " ")
 

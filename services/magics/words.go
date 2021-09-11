@@ -1,4 +1,5 @@
 package magics
 
-const MagicWordRoll = "!roll"
+const MagicRoll = "!roll"
 const MagicTranslate = "!translate"
+const MagicRate = "!rate"

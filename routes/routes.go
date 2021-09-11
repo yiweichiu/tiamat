@@ -17,7 +17,9 @@ func Entry() {
 			"message": "pong",
 		})
 	})
-
+	r.GET("/test", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, nil)
+	})
 	r.POST("/callback", services.Handler)
 
 	r.Run()

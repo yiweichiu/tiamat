@@ -61,13 +61,12 @@ func eventTypeMsg(event *linebot.Event) {
 
 		if text[0] == '!' {
 			replyMsg = magicWord(event, text)
-		}
-
-		if _, err := bot.ReplyMessage(
-			event.ReplyToken,
-			linebot.NewTextMessage(replyMsg),
-		).Do(); err != nil {
-			log.Print(err)
+			if _, err := bot.ReplyMessage(
+				event.ReplyToken,
+				linebot.NewTextMessage(replyMsg),
+			).Do(); err != nil {
+				log.Print(err)
+			}
 		}
 	default:
 		log.Printf("message: %v", message)

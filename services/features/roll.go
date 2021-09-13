@@ -31,12 +31,8 @@ func Roll(msg string) string {
 		}
 	}
 
-	if from < 0 || to < 0 {
+	if from < 0 || to < 0 || from == to {
 		return "不要搞啦!!"
-	}
-
-	if from == to {
-		wrongArg = true
 	}
 
 	var rand int

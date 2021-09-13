@@ -42,7 +42,7 @@ func GetSymbolQuote(symbol string) string {
 		return ""
 	}
 
-	if data.QuoteResponse.Results == nil {
+	if len(data.QuoteResponse.Results) < 1 {
 		log.Print(data.QuoteResponse.Err)
 		return "不要搞啦!!"
 	}

@@ -31,6 +31,14 @@ func Roll(msg string) string {
 		}
 	}
 
+	if from < 0 || to < 0 {
+		return "不要搞啦!!"
+	}
+
+	if from == to {
+		wrongArg = true
+	}
+
 	var rand int
 	if wrongArg {
 		rand = roll(defaultRangeFrom, defaultRangeTo)
@@ -57,5 +65,5 @@ func roll(from, to int) int {
 		seed = rand.New(src)
 	}
 
-	return seed.Intn(to) + from
+	return seed.Intn(to-from) + from
 }

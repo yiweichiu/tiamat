@@ -42,9 +42,9 @@ func GetSymbolQuote(symbol string) string {
 		return ""
 	}
 
-	if data.QuoteResponse.Err != "" {
+	if data.QuoteResponse.Results == nil {
 		log.Print(data.QuoteResponse.Err)
-		return ""
+		return "不要搞啦!!"
 	}
 
 	return fmt.Sprintf("%s : %s\n%s : %s\n%s : %.2f", "股票名稱", data.QuoteResponse.Results[0].LongName, "股票代碼", symbol, "股票價格", data.QuoteResponse.Results[0].RegularMarketPrice)

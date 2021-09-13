@@ -11,6 +11,11 @@ func Quote(msg string) string {
 	if len(tokens) <= 1 {
 		return quoteHelp()
 	}
+
+	if len(tokens) > 2 {
+		return "不要搞啦!!"
+	}
+
 	return yahoo.GetSymbolQuote(tokens[1])
 }
 

@@ -31,6 +31,10 @@ func Roll(msg string) string {
 		}
 	}
 
+	if from < 0 || to < 0 {
+		return "不要搞啦!!"
+	}
+
 	var rand int
 	if wrongArg {
 		rand = roll(defaultRangeFrom, defaultRangeTo)

@@ -70,7 +70,6 @@ func eventTypeMsg(event *linebot.Event) {
 			log.Print(err)
 		}
 	default:
-		log.Printf("message: %v", message)
 	}
 }
 

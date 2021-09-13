@@ -42,8 +42,8 @@ func GetSymbolQuote(symbol string) string {
 		return ""
 	}
 
-	if data.QuoteResponse.Err != "" {
-		log.Print(data.QuoteResponse.Err)
+	if data.QuoteResponse.Results == nil {
+		log.Printf("wrong symbol type : %s", symbol)
 		return ""
 	}
 

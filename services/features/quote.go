@@ -8,8 +8,12 @@ import (
 func Quote(msg string) string {
 	tokens := strings.Split(msg, " ")
 
-	if len(tokens) <= 1 {
+	if len(tokens) < 2 {
 		return quoteHelp()
+	}
+
+	if len(tokens) > 2 {
+		return "不要搞啦!!"
 	}
 	return yahoo.GetSymbolQuote(tokens[1])
 }

@@ -1,10 +1,77 @@
 package features
 
+import (
+	"log"
+	"strconv"
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/gocolly/colly"
+)
+
+const rateUrl = "https://rate.bot.com.tw/xrt?Lang=zh-TW"
+
 func Rate(msg string) string {
-	return ""
+	tokens := strings.Split(msg, " ")
+	c := colly.NewCollector()
+
+	if len(tokens) == 1 {
+		return rateHelp()
+	}
+
+	var transfer int64
+	if len(tokens) > 2 {
+		tr, err := strconv.ParseInt(tokens[2], 10, 0)
+		if err != nil {
+			log.Print("Wrong price transfer from user :" + tokens[2])
+			return "wrong information"
+		}
+		transfer = tr
+	}
+
+	targetCurrency := tokens[1]
+	buy := ""
+	sell := ""
+	isPrice := false
+
+	c.OnHTML("table[title='牌告匯率']", func(e *colly.HTMLElement) {
+		tableBody := e.DOM.Find("tbody")
+		tableBody.Each(func(cnt int, body *goquery.Selection) {
+			tableRaw := body.Find("tr")
+			tableRaw.Each(func(cnt int, raw *goquery.Selection) {
+				typeColumn := raw.Find("td[data-table='幣別']")
+				typeText := typeColumn.Find("div[class='visible-phone print_hide']")
+				if strings.Contains(typeText.Text(), strings.ToLower(targetCurrency)) || strings.Contains(typeText.Text(), strings.ToUpper(targetCurrency)) {
+					isPrice = true
+					buy = strings.TrimSpace(raw.Find("td[data-table='本行即期買入']").First().Text())
+					sell = strings.TrimSpace(raw.Find("td[data-table='本行即期賣出']").First().Text())
+				}
+			})
+		})
+	})
+	c.Visit(rateUrl)
+
+	if isPrice {
+		resp := ""
+		resp += strings.ToUpper(targetCurrency)
+		resp += "\n"
+		resp += "即期買入 : " + buy + "\n"
+		resp += "即期賣出 : " + sell + "\n"
+		if transfer != 0 {
+			price, err := strconv.ParseFloat(buy, 0)
+			if err != nil {
+				log.Print("Wrong price transfer from crawler :" + sell)
+				return "wrong information"
+			}
+			result := float64(transfer) * price
+			resp += "換算台幣 : " + strconv.FormatFloat(result, 'f', 0, 64)
+		}
+		return resp
+	}
+	return rateHelp()
 }
 
-func help() string {
+func rateHelp() string {
 	var helpMsg string
 	helpMsg += "usd 美元\n"
 	helpMsg += "hkd 港幣\n"

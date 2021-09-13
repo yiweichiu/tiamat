@@ -18,7 +18,9 @@ func Entry() {
 		})
 	})
 	r.GET("/test", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, nil)
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "test",
+		})
 	})
 	r.POST("/callback", services.Handler)
 

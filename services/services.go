@@ -80,6 +80,10 @@ func magicWord(event *linebot.Event, msg string) string {
 	switch tokens[0] {
 	case magics.MagicRoll:
 		return features.Roll(msg)
+	case magics.MagicRate:
+		return features.Rate(msg)
+	case magics.MagicQuote:
+		return features.Quote(msg)
 	default:
 		return ""
 	}

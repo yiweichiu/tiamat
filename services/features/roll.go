@@ -31,7 +31,7 @@ func Roll(msg string) string {
 		}
 	}
 
-	if from < 0 || to < 0 {
+	if from < 0 || to < 0 || from == to {
 		return "不要搞啦!!"
 	}
 
@@ -61,5 +61,5 @@ func roll(from, to int) int {
 		seed = rand.New(src)
 	}
 
-	return seed.Intn(to) + from
+	return seed.Intn(to-from) + from
 }

@@ -30,8 +30,10 @@ func Rate(msg string) string {
 	}
 
 	targetCurrency := tokens[1]
-	buy := ""
-	sell := ""
+	spotBuy := ""
+	spotSell := ""
+	cashBuy := ""
+	cashSell := ""
 	isPrice := false
 
 	c.OnHTML("table[title='牌告匯率']", func(e *colly.HTMLElement) {
@@ -43,8 +45,10 @@ func Rate(msg string) string {
 				typeText := typeColumn.Find("div[class='visible-phone print_hide']")
 				if strings.Contains(typeText.Text(), strings.ToLower(targetCurrency)) || strings.Contains(typeText.Text(), strings.ToUpper(targetCurrency)) {
 					isPrice = true
-					buy = strings.TrimSpace(raw.Find("td[data-table='本行即期買入']").First().Text())
-					sell = strings.TrimSpace(raw.Find("td[data-table='本行即期賣出']").First().Text())
+					cashBuy = strings.TrimSpace(raw.Find("td[data-table='本行現金買入']").First().Text())
+					cashSell = strings.TrimSpace(raw.Find("td[data-table='本行現金賣出']").First().Text())
+					spotBuy = strings.TrimSpace(raw.Find("td[data-table='本行即期買入']").First().Text())
+					spotSell = strings.TrimSpace(raw.Find("td[data-table='本行即期賣出']").First().Text())
 				}
 			})
 		})
@@ -55,13 +59,25 @@ func Rate(msg string) string {
 		resp := ""
 		resp += strings.ToUpper(targetCurrency)
 		resp += "\n"
-		resp += "即期買入 : " + buy + "\n"
-		resp += "即期賣出 : " + sell + "\n"
+		resp += "即期買入 : " + spotBuy + "\n"
+		resp += "即期賣出 : " + spotSell + "\n"
+		resp += "現金買入 : " + cashBuy + "\n"
+		resp += "現金賣出 : " + cashSell + "\n"
 		if transfer != 0 {
-			price, err := strconv.ParseFloat(buy, 0)
-			if err != nil {
-				log.Print("Wrong price transfer from crawler :" + sell)
-				return "wrong information"
+			var price float64
+			var err error
+			if spotBuy == "-" {
+				price, err = strconv.ParseFloat(spotBuy, 0)
+				if err != nil {
+					log.Print("Wrong price transfer from crawler :" + spotBuy)
+					return "wrong information"
+				}
+			} else {
+				price, err = strconv.ParseFloat(cashBuy, 0)
+				if err != nil {
+					log.Print("Wrong price transfer from crawler :" + cashBuy)
+					return "wrong information"
+				}
 			}
 			result := float64(transfer) * price
 			resp += "換算台幣 : " + strconv.FormatFloat(result, 'f', 0, 64)

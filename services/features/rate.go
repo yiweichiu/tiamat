@@ -62,7 +62,7 @@ func Rate(msg string) string {
 		resp += "即期買入 : " + spotBuy + "\n"
 		resp += "即期賣出 : " + spotSell + "\n"
 		resp += "現金買入 : " + cashBuy + "\n"
-		resp += "現金賣出 : " + cashSell + "\n"
+		resp += "現金賣出 : " + cashSell
 		if transfer != 0 {
 			var price float64
 			var err error
@@ -107,6 +107,6 @@ func rateHelp() string {
 	helpMsg += "krw 韓圓\n"
 	helpMsg += "vnd 越南盾\n"
 	helpMsg += "myr 令吉\n"
-	helpMsg += "cny 人民幣\n"
+	helpMsg += "cny 人民幣"
 	return helpMsg
 }

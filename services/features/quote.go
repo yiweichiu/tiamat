@@ -21,6 +21,6 @@ func Quote(msg string) string {
 func quoteHelp() string {
 	var helpMsg string
 	helpMsg += "台股 !quote [股票代號].TW\n"
-	helpMsg += "美股 !quote [股票代號]\n"
+	helpMsg += "美股 !quote [股票代號]"
 	return helpMsg
 }
